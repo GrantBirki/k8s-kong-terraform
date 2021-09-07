@@ -1,0 +1,55 @@
+#!/bin/bash
+
+# This is a script to automatically build and deploy your K8s cluster!
+# Note: Deploying this cluster will incur costs
+
+# Global Directory Variables
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )" # The directory of this script
+REPO_DIR="$(dirname "$SCRIPT_DIR")" # The root directory of this repository
+
+echo "🔨 Let's build a K8s cluster!"
+
+which tfenv > /dev/null
+
+if [ $? -ne 0 ]; then
+  echo "❌ Please install tfenv to continue! Exiting..."
+  exit 1
+else
+  echo "✅ tfenv is installed"
+fi
+
+TF_VAR_FILE="terraform/k8s-cluster/terraform.auto.tfvars.json"
+if [ -f "$TF_VAR_FILE" ]; then
+    echo "✅ $TF_VAR_FILE exists"
+else 
+    echo "❌ $TF_VAR_FILE does not exist! Please create it and add your Azure credentials. Exiting..."
+    exit 1
+fi
+
+grep -i "aaaaaa-aaaa-aaaa-aaaa-aaaaaaaa\|bbbbbb-bbbb-bbbb-bbbb-bbbbbbbb" $TF_VAR_FILE
+
+if [ $? -ne 1 ]; then
+  echo "❌ Please update the '$TF_VAR_FILE' file to contain your Azure credentials! Exiting..."
+  exit 1
+else
+  echo "✅ $TF_VAR_FILE contains non-default credentials"
+fi
+
+# First we deploy the infrastructure for the k8s cluster
+echo "🚀 Deploying 'terraform/k8s-cluster'..."
+cd terraform/k8s-cluster
+terraform init || exit 1
+terraform apply -auto-approve || exit 1
+echo "✅ terraform/k8s-cluster deployed"
+
+cd $REPO_DIR
+
+# Then we deploy the applications that are part of the k8s cluster
+echo "🚀 Deploying 'terraform/k8s'..."
+cd terraform/k8s
+terraform init || exit 1
+terraform apply -auto-approve || exit 1
+echo "✅ terraform/k8s deployed"
+echo ""
+echo "🧪 Time to test! Open up your Azure account and check your 'kong-proxy' IP address. This will be publically facing and allow you to test your K8s application!"
+echo "✨ Done! ✨"
