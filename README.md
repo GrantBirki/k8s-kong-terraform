@@ -14,10 +14,13 @@ You will need a few things to use this project:
 2. [tfenv](https://github.com/tfutils/tfenv)
 3. A [Terraform Cloud](https://www.terraform.io/cloud) account to store your TF state remotely
 4. Azure credentials to run Terraform deployments. An example to create creds can be seen below (easy):
-
-     - `az ad sp create-for-rbac --skip-assignment`
-     - Copy the resulting `appId` and `password` to -> `terraform/k8s-cluster/terraform.auto.tfvars.json`
-5. You will need to
+    - `az ad sp create-for-rbac --skip-assignment`
+    - Copy the resulting `appId` and `password` to -> `terraform/k8s-cluster/terraform.auto.tfvars.json`
+5. You will need to skim through the following files and edit the lines with comments:
+    - [`terraform\k8s\versions.tf`](terraform\k8s\versions.tf)
+    - [`terraform\k8s-cluster\versions.tf`](terraform\k8s-cluster\versions.tf)
+    - [`terraform\k8s\k8s-cluster.tf`](terraform\k8s\k8s-cluster.tf)
+    - [`terraform\k8s-cluster\k8s-cluster.tf`](terraform\k8s-cluster\k8s-cluster.tf)
 
 ## Usage
 

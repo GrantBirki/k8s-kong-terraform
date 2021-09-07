@@ -23,7 +23,7 @@ resource "azurerm_kubernetes_cluster" "default" {
     name            = "default"
     node_count      = 2 # How many nodes do you want in your cluster?
     vm_size         = "Standard_B2s" # Change the size of the VM running the node
-    os_disk_size_gb = 30 # Change the OS disk size on each node
+    os_disk_size_gb = 30 # Change the OS disk size (GB) on each node
   }
 
   service_principal {
