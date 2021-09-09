@@ -28,6 +28,7 @@ else
     exit 1
 fi
 
+set +e
 grep -i "aaaaaa-aaaa-aaaa-aaaa-aaaaaaaa\|bbbbbb-bbbb-bbbb-bbbb-bbbbbbbb" $TF_VAR_FILE
 
 if [ $? -ne 1 ]; then
@@ -36,6 +37,7 @@ if [ $? -ne 1 ]; then
 else
   echo "✅ $TF_VAR_FILE contains non-default credentials"
 fi
+set -e
 
 # First we deploy the infrastructure for the k8s cluster
 echo "🚀 Deploying 'terraform/k8s-cluster'..."
