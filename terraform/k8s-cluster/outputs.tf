@@ -6,6 +6,10 @@ output "kubernetes_cluster_name" {
   value = azurerm_kubernetes_cluster.default.name
 }
 
+output "kubernetes_cluster_full_id" {
+  value = azurerm_kubernetes_cluster.default.id
+}
+
 # output "host" {
 #   value = azurerm_kubernetes_cluster.default.kube_config.0.host
 # }

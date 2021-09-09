@@ -14,10 +14,28 @@ echo "🔨 Let's build a K8s cluster!"
 which tfenv > /dev/null
 
 if [ $? -ne 0 ]; then
+  echo "❌ Please install the Azure CLI to continue! https://docs.microsoft.com/en-us/cli/azure/install-azure-cli | Exiting..."
+  exit 1
+else
+  echo "✅ Azure CLI is installed"
+fi
+
+which az > /dev/null
+
+if [ $? -ne 0 ]; then
   echo "❌ Please install tfenv to continue! Exiting..."
   exit 1
 else
   echo "✅ tfenv is installed"
+fi
+
+which kubectl > /dev/null
+
+if [ $? -ne 0 ]; then
+  echo "❌ Please install kubectl to continue! Exiting..."
+  exit 1
+else
+  echo "✅ kubectl is installed"
 fi
 
 TF_VAR_FILE="terraform/k8s-cluster/terraform.auto.tfvars.json"
@@ -46,12 +64,40 @@ terraform init || exit 1
 terraform apply -auto-approve || exit 1
 echo "✅ terraform/k8s-cluster deployed"
 
+echo "⛵ Configuring kubectl environment"
+
+SUBSCRIPTION_ID=$(terraform show | grep -E '\/subscriptions\/(.*)(\/resourcegroups\/?)' --only-matching | sed -E 's/.*\/subscriptions\/(.*)(\/resourcegroups\/?)/\1/' | tr '\n' ' ' | cut -d ' ' -f 1)
+K8S_CLUSTER_NAME=$(terraform show | grep 'kubernetes_cluster_name' | cut -d "=" -f 2 | tr '"' ' ' | xargs)
+RESOURCE_GROUP_NAME=$(terraform show | grep 'resource_group_name' | cut -d "=" -f 2 | tr '"' ' ' | xargs | cut -d ' ' -f 1)
+
+az account set --subscription $SUBSCRIPTION_ID
+az aks get-credentials --resource-group $RESOURCE_GROUP_NAME --name $K8S_CLUSTER_NAME
+
 cd $REPO_DIR
 
 echo "🔨 Time to build K8s resources and apply their manifests on the cluster!"
 
 # Apply all the manifests in the k8s/ directory
+set +e
 kubectl apply -f k8s/ --recursive
 
-echo -e "✅ All manifests applied successfully\n"
-echo "✨ Done! ✨"
+if [ $? -ne 0 ]; then
+  echo "💡 A possible race condition occured. Sleeping and trying once more!"
+  sleep 15
+else
+  echo -e "✅ All manifests applied successfully\n"
+  echo "✨ Done! ✨"
+  exit 0
+fi
+
+# Try once more
+kubectl apply -f k8s/ --recursive
+
+if [ $? -ne 0 ]; then
+  echo "❌ An error occured during 'kubectl apply -f k8s/ --recursive'"
+  exit 1
+else
+  echo -e "✅ All manifests applied successfully\n"
+  echo "✨ Done! ✨"
+  exit 0
+fi
