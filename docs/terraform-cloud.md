@@ -2,6 +2,22 @@
 
 If you are using Terraform Cloud to save your state files you will need to do a few short steps to ensure this project works for you:
 
+## Steps
+
+1. Create a Terraform workspace
+1. Add your organization and workspace to the `terraform\k8s-cluster\versions.tf` file
+1. Done! 🎉
+
+> Note: There are old docs below to reference if you want. The steps above should be all you need
+
+---
+
+## OLD DOCS (deprecated)
+
+> Note: This is an old docs section that is being preserved for reference. This is for building the cluster and the resources with pure Terraform and no K8s yaml manifests
+
+> If you followed the steps above you should be done
+
 1. Create two seperate workspaces (example below)
 
     ![Terraform Workspaces](assets/tf-workspaces.png)
