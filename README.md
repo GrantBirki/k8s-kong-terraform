@@ -18,10 +18,8 @@ You will need a few things to use this project:
     - `az ad sp create-for-rbac --skip-assignment`
     - Copy the resulting `appId` and `password` to -> `terraform/k8s-cluster/terraform.auto.tfvars.json`
 5. You will need to skim through the following files and edit the lines with comments:
-    - [`terraform\k8s\versions.tf`](terraform\k8s\versions.tf)
     - [`terraform\k8s-cluster\versions.tf`](terraform\k8s-cluster\versions.tf)
-    - [`terraform\k8s\k8s-cluster.tf`](terraform\k8s\k8s-cluster.tf)
-    - [`terraform\k8s-cluster\k8s-cluster.tf`](terraform\k8s-cluster\k8s-cluster.tf)
+    - [`terraform\k8s-cluster\variables.tf`](terraform\k8s-cluster\variables.tf)
 
 ## Usage
 
@@ -35,7 +33,8 @@ $ make build
 ✅ terraform/k8s-cluster/terraform.auto.tfvars.json exists
 ✅ terraform/k8s-cluster/terraform.auto.tfvars.json contains non-default credentials
 🚀 Deploying 'terraform/k8s-cluster'...
-🚀 Deploying 'terraform/k8s'...
+🔨 Time to build K8s resources and apply their manifests on the cluster!
+✅ All manifests applied successfully
 ✨ Done! ✨
 ```
 
@@ -54,7 +53,6 @@ Continue with the complete destruction of your K8s cluster (y/n)? y
 ✅ tfenv is installed
 ✅ terraform/k8s-cluster/terraform.auto.tfvars.json exists
 ✅ terraform/k8s-cluster/terraform.auto.tfvars.json contains non-default credentials
-💥 Destroying 'terraform/k8s'...
 💥 Destroying 'terraform/k8s-cluster'...
 ✨ Done! ✨
 ```
@@ -63,11 +61,7 @@ Continue with the complete destruction of your K8s cluster (y/n)? y
 
 - `script/` - Contains various scripts for deployments and maintenance
 - `terraform/k8s-cluster` - The main terraform files for building the infrastructure of the K8s cluster. This folder contains configurations for the amount of K8s nodes, their VM size, their storage, etc
-- `terraform/k8s` - The main terraform files for how K8s and its related services are configured. In here you will find definitions for Kong and the containers which run in K8s
-- `terraform/k8s/modules` - More or less just used as folders for to organize Terraform HCL files
-- `terraform/k8s/modules/kong` - The configuration for Kong. Split into the `base`, `plugins`, and `routes`. You will most often be editing the `routes` file for new API routes
-- `terraform/k8s/modules/containers` - Each sub folder in this folder is for creating new containers/resources that you want to deploy to your K8s cluster
-  - See the `terraform/k8s/modules/containers/nginx_example` folder and view the `terraform/k8s/main.tf` file for how we can create a K8s deployment + service in an organized manner
+- `k8s/*` - Kubernetes deployment manifests for Kong, Grafana/Prometheus, and the NGINX example http server
 
 ## Purpose 💡
 
