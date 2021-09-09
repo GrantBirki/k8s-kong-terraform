@@ -45,6 +45,8 @@ $ make build
 ⛵ Configuring kubectl environment
 🔨 Time to build K8s resources and apply their manifests on the cluster!
 ✅ All manifests applied successfully
+🦍 Kong LoadBalancer IP: 123.123.123.123
+📊 Run 'script/grafana' to connect to the Kong metrics dashboard
 ✨ Done! ✨
 ```
 

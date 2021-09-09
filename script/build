@@ -77,6 +77,16 @@ cd $REPO_DIR
 
 echo "🔨 Time to build K8s resources and apply their manifests on the cluster!"
 
+k8s_success () {
+
+  PROXY_IP=$(kubectl get -o jsonpath="{.status.loadBalancer.ingress[0].ip}" service -n kong kong-proxy)
+
+  echo -e "✅ All manifests applied successfully\n"
+  echo -e "🦍 Kong LoadBalancer IP: $PROXY_IP"
+  echo -e "📊 Run 'script/grafana' to connect to the Kong metrics dashboard"
+  echo -e "✨ Done! ✨"
+}
+
 # Apply all the manifests in the k8s/ directory
 set +e
 kubectl apply -f k8s/ --recursive
@@ -85,8 +95,7 @@ if [ $? -ne 0 ]; then
   echo "💡 A possible race condition occured. Sleeping and trying once more!"
   sleep 15
 else
-  echo -e "✅ All manifests applied successfully\n"
-  echo "✨ Done! ✨"
+  k8s_success
   exit 0
 fi
 
@@ -96,8 +105,6 @@ kubectl apply -f k8s/ --recursive
 if [ $? -ne 0 ]; then
   echo "❌ An error occured during 'kubectl apply -f k8s/ --recursive'"
   exit 1
-else
-  echo -e "✅ All manifests applied successfully\n"
-  echo "✨ Done! ✨"
-  exit 0
 fi
+
+k8s_success
