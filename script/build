@@ -3,6 +3,8 @@
 # This is a script to automatically build and deploy your K8s cluster!
 # Note: Deploying this cluster will incur costs
 
+set -e
+
 # Global Directory Variables
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )" # The directory of this script
 REPO_DIR="$(dirname "$SCRIPT_DIR")" # The root directory of this repository
@@ -44,4 +46,10 @@ echo "✅ terraform/k8s-cluster deployed"
 
 cd $REPO_DIR
 
+echo "🔨 Time to build K8s resources and apply their manifests on the cluster!"
+
+# Apply all the manifests in the k8s/ directory
+kubectl apply -f k8s/ --recursive
+
+echo -e "✅ All manifests applied successfully\n"
 echo "✨ Done! ✨"
