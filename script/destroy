@@ -42,16 +42,6 @@ else
   echo "✅ $TF_VAR_FILE contains non-default credentials"
 fi
 
-# Then we destroy the infrastructure for the k8s cluster
-echo "💥 Destroying 'terraform/k8s'..."
-cd terraform/k8s
-terraform init || exit 1
-terraform destroy -auto-approve || exit 1
-echo "✅ terraform/k8s destroyed"
-
-cd $REPO_DIR
-
-# First we destroy the applications that are part of the k8s cluster
 echo "💥 Destroying 'terraform/k8s-cluster'..."
 cd terraform/k8s-cluster
 terraform init || exit 1
