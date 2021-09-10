@@ -40,7 +40,7 @@ read -p "Please enter the email you wish to associate with LetsEncrypt (ex: name
 sed -i "s/<example-email@example.com>/$TLS_EMAIL/g" $REPO_DIR/k8s/01-cert-manager/03-lets-encrypt.yaml
 read -p "What is the main hostname for your site that you would like to use (ex: www.example.com)? " WEB_HOSTNAME
 sed -i "s/<www.example.com>/$WEB_HOSTNAME/g" $REPO_DIR/k8s/03-kong/02-kong-routes.yaml
-read -p "Do you want to publically expose Grafana (If not, TLS is not needed for Grafana) (y/n)?" GRAFANA_OPTION
+read -p "Do you want to publically expose Grafana (If not, TLS is not needed for Grafana) (y/n)? " GRAFANA_OPTION
 if [ "$GRAFANA_OPTION" = "y" ]; then
   read -p "Do you want to IP restrict Grafana(y/n)? " GRAFANA_IP_OPTION
   if [ "$GRAFANA_IP_OPTION" = "y" ]; then
@@ -56,11 +56,16 @@ else
 fi
 
 echo "Nice work! Now here comes the manual part (sorry). Scroll through each of the following files and read each text comment carefully to configure your TLS settings:"
-echo "  - k8s/01-cert-manager/01-namespace.yaml"
-echo "  - k8s/01-cert-manager/02-cert-manager.yaml"
 echo "  - k8s/01-cert-manager/03-lets-encrypt.yaml"
 echo "  - k8s/03-kong/02-kong-routes.yaml"
 echo "  - k8s/03-kong/03-kong-plugins.yaml"
+
+PROXY_IP=$(kubectl get -o jsonpath="{.status.loadBalancer.ingress[0].ip}" service -n kong kong-proxy) || echo "❌ Failed to get the IP address of the kong-proxy service" && exit 1
+
+echo -e "\n You will also need to update your DNS records to point to your new hostname(s) for TLS to work correctly. Here are examples of the the DNS records you will need to create assuming you enabled TLS and public routing for www.example.com and grafana.example.com:"
+echo "  - Type: A     | Key: proxy.example.com   | Value: $PROXY_IP (kong proxy)"
+echo "  - Type: CNAME | Key: www.example.com     | Value: proxy.example.com"
+echo "  - Type: CNAME | Key: grafana.example.com | Value: proxy.example.com"
 
 read -p "Type 'y' to continue once you have completed the steps above and have your manual TLS settings configured (y/n)? " MANUAL_CONT
 
