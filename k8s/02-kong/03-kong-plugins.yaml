@@ -7,3 +7,12 @@ metadata:
   labels:
     global: "true"
 plugin: prometheus
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: ip-allowlist
+config:
+  allow:
+    - 123.123.123.123/32 # Add your own IP here to allow just your own traffic
+plugin: ip-restriction

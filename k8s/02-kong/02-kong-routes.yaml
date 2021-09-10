@@ -4,6 +4,7 @@ metadata:
   name: example
   annotations:
     konghq.com/strip-path: "true"
+    # konghq.com/plugins: ip-allowlist # Uncomment to enable IP allowlist plugin
 spec:
   ingressClassName: "kong"
   rules:

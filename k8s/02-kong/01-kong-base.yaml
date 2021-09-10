@@ -587,6 +587,7 @@ spec:
     targetPort: 8443
   selector:
     app: ingress-kong
+  externalTrafficPolicy: Local # This preserves the true client IP to Kong, rather than the Azure LB IP
   type: LoadBalancer
 ---
 apiVersion: v1
