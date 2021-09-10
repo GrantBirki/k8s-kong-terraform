@@ -82,29 +82,26 @@ k8s_success () {
   PROXY_IP=$(kubectl get -o jsonpath="{.status.loadBalancer.ingress[0].ip}" service -n kong kong-proxy)
 
   echo -e "✅ All manifests applied successfully\n"
-  echo -e "🦍 Kong LoadBalancer IP: $PROXY_IP"
+  echo -e "🦍 Kong LoadBalancer IP: http://$PROXY_IP"
   echo -e "📊 Run 'script/grafana' to connect to the Kong metrics dashboard"
   echo -e "✨ Done! ✨"
 }
 
+k8s_apply () {
+  echo "🚀 Applying manifests..."
+  kubectl apply -f k8s/ --recursive
+}
+
 # Apply all the manifests in the k8s/ directory
 set +e
-kubectl apply -f k8s/ --recursive
-
-if [ $? -ne 0 ]; then
-  echo "💡 A possible race condition occured. Sleeping and trying once more!"
-  sleep 15
-else
-  k8s_success
-  exit 0
-fi
-
-# Try once more
-kubectl apply -f k8s/ --recursive
-
-if [ $? -ne 0 ]; then
-  echo "❌ An error occured during 'kubectl apply -f k8s/ --recursive'"
-  exit 1
-fi
-
-k8s_success
+while true
+do
+  k8s_apply
+  if [ $? -ne 0 ]; then
+    echo "💡 A possible race condition occured. Sleeping and trying again... Hint: press 'ctrl+c' to abort the retry loop"
+    sleep 5
+  else
+    k8s_success
+    break
+  fi
+done
