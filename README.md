@@ -10,6 +10,7 @@ Once deployed, a sample NGINX HTTP application will be up and running for you to
 - A K8s ingress that uses [Kong](https://konghq.com/)
 - Grafana/Prometheus dashboards for viewing network metrics from Kong (made for you)
 - A sample NGINX application which serves HTTP requests (loadbalanced by Kong)
+- (optionally) Enable TLS encryption on your external facing Kong ingress for security!
 
 ## Prerequisites
 
