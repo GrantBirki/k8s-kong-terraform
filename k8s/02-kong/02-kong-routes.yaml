@@ -8,12 +8,35 @@ metadata:
 spec:
   ingressClassName: "kong"
   rules:
-    - http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: example
-                port:
-                  number: 80
+  - host: api.birki.io # Change to your domain
+    http:
+      paths:
+      - pathType: Prefix
+        path: /
+        backend:
+          service:
+            name: example
+            port:
+              number: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: monitoring
+  namespace: monitoring
+  annotations:
+    konghq.com/strip-path: "true"
+    konghq.com/plugins: ip-allowlist # Comment to enable IP allowlist plugin
+spec:
+  ingressClassName: "kong"
+  rules:
+  - host: grafana.birki.io # Change to your domain
+    http:
+      paths:
+      - pathType: Prefix
+        path: /
+        backend:
+          service:
+            name: grafana
+            port:
+              number: 80
