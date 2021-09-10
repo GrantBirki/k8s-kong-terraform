@@ -15,16 +15,16 @@ spec:
 
   ingressClassName: "kong"
   rules:
-    # - host: <www.example.com> # Uncomment to enable hostname (needed if you enable the external Grafana section below)
-      http:
-        paths:
-          - pathType: Prefix
-            path: /
-            backend:
-              service:
-                name: example
-                port:
-                  number: 80
+    # - host: <www.example.com> # Uncomment to enable hostname (needed if you enable the external Grafana section below) and indent your YAML
+      - http:
+          paths:
+            - pathType: Prefix
+              path: /
+              backend:
+                service:
+                  name: example
+                  port:
+                    number: 80
 ---
 # Un comment the block below to expose your Grafana dashboard publically
 # Note: It is highly recommended to use the IP allowlist plugin to limit access to the dashboard
