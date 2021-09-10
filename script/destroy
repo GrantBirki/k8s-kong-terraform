@@ -14,6 +14,7 @@ if [ "$CONT" = "y" ]; then
   echo "✅ Approval for destroy accepted";
 else
   echo "❌ Exiting!";
+  exit 1
 fi
 
 which tfenv > /dev/null
