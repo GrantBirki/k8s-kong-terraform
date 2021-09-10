@@ -69,6 +69,28 @@ Continue with the complete destruction of your K8s cluster (y/n)? y
 ✨ Done! ✨
 ```
 
+### Enabling TLS 🔒
+
+This is a bonus / expirmental section. It "works on my machine ™" but it will take a smidge of manual setup, knowledge of letsencrypt, DNS, etc
+
+What you need first (pre-reqs):
+
+- A domain name (www.example.com)
+- A way to confirgure DNS records for your domain (route53, AzureDNS, etc)
+- A working DNS cluster that has been built with `make build` (above) - Copy down your Kong Proxy IP
+
+#### Steps
+
+These are a mix of steps and an outline of the `make enable-tls` helper script
+
+1. Execute the following command: `make enable-tls`
+    - This will invoke a bash script which will swap around some files, prompt you for some input, and inject said input into K8s manifests via sed
+1. It is recommended to say yes (y) to everything and enter the information requested
+1. When prompted, create DNS records that point to your K8s cluster. You will need an A record that points to your Kong LoadBalancer ingress and a CNAME that maps to the A record at a minimum
+1. When prompted, edit each listed K8s manifest file to your liking. This part requires you to have a bit of K8s knowledge in what you need to use and where. Each manifest file is commented to help you along!
+1. The end of the script will run a full deployment of the cluster
+1. It will take a few minutes for everything to settle and for your TLS certificates to be provisioned. Happy encryption! 🔒
+
 ## Project Folder Information 📂
 
 - `script/` - Contains various scripts for deployments and maintenance
