@@ -35,6 +35,8 @@ You will need a few things to use this project:
 
 Build a K8s cluster with a single command!
 
+> Go make a coffee while this runs because it can take up to 15 minutes
+
 ```console
 $ make build
 
