@@ -1,8 +1,18 @@
-# k8s-kong-terraform
 
-Create a Kubernetes cluster using Kong as an ingress running in Azure AKS using PURE Terraform!
+<h1 align="center">k8s-kong-terraform</h1>
+<h1 align="center">
+    <img src="docs/assets/k8s.png" alt="errbot" align="center" width="64px"/>
+    <img src="docs/assets/kong.png" alt="errbot" align="center" width="64px"/>
+    <img src="docs/assets/terraform.png" alt="errbot" align="center" width="64px"/>
+</h1>
 
-Once deployed, a sample NGINX HTTP application will be up and running for you to test.
+<p align="center">
+  Create a K8s cluster with a Kong Ingress using pure Terraform
+  <br>
+  Once deployed, a sample NGINX HTTP application will be up and running for you to test against
+</p>
+
+<hr>
 
 ## What you will create
 
