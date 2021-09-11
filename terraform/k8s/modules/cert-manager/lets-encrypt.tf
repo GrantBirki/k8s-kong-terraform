@@ -1,28 +1,11 @@
-resource "kubernetes_manifest" "clusterissuer_letsencrypt_prod" {
-  manifest = {
-    "apiVersion" = "cert-manager.io/v1"
-    "kind" = "ClusterIssuer"
-    "metadata" = {
-      "name" = "letsencrypt-prod"
-    }
-    "spec" = {
-      "acme" = {
-        "email" = "<example-email@example.com>" # Put your own email here
-        "privateKeySecretRef" = {
-          # Secret resource that will be used to store the account's private key.
-          "name" = "letsencrypt-prod-issuer-account-key"
-        }
-        "server" = "https://acme-v02.api.letsencrypt.org/directory"
-        "solvers" = [
-          {
-            "http01" = {
-              "ingress" = {
-                "class" = "kong"
-              }
-            }
-          },
-        ]
-      }
-    }
-  }
+data "kubectl_file_documents" "lets_encrypt_manifests" {
+  content = file("modules/cert-manager/lets-encrypt.yaml")
+}
+
+resource "kubectl_manifest" "lets_encrypt_manifest" {
+  depends_on = [
+    kubectl_manifest.cert_manager_namespace
+  ]
+  count     = length(data.kubectl_file_documents.lets_encrypt_manifests.documents)
+  yaml_body = element(data.kubectl_file_documents.lets_encrypt_manifests.documents, count.index)
 }
