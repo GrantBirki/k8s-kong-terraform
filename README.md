@@ -21,7 +21,7 @@ You will need a few things to use this project:
 1. [kubectl](https://kubernetes.io/docs/tasks/tools/) (for applying K8s manifests)
 1. [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
 1. A [Terraform Cloud](https://www.terraform.io/cloud) account to store your TF state remotely
-    - See the [`terraform-cloud`](docs/terraform-cloud.md) docs in this repo for more info
+    - See the [`terraform-cloud`](docs/terraform-cloud.md) docs in this repo for more info (required if you are using Terraform Cloud)
 1. Azure credentials to run Terraform deployments. An example to create creds can be seen below (easy):
     - `az ad sp create-for-rbac --skip-assignment`
     - Copy the resulting `appId` and `password` to -> `terraform/k8s-cluster/terraform.auto.tfvars.json`
