@@ -22421,16 +22421,6 @@ resource "kubernetes_manifest" "customresourcedefinition_orders_acme_cert_manage
   }
 }
 
-resource "kubernetes_manifest" "namespace_cert_manager" {
-  manifest = {
-    "apiVersion" = "v1"
-    "kind" = "Namespace"
-    "metadata" = {
-      "name" = "cert-manager"
-    }
-  }
-}
-
 resource "kubernetes_manifest" "serviceaccount_cert_manager_cert_manager_cainjector" {
   manifest = {
     "apiVersion" = "v1"
