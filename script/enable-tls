@@ -66,8 +66,6 @@ echo "🚀 Let's attempt a deploy with TLS!"
 
 k8s_success () {
 
-  PROXY_IP=$(kubectl get -o jsonpath="{.status.loadBalancer.ingress[0].ip}" service -n kong kong-proxy)
-
   echo -e "✅ All manifests applied successfully\n"
   echo -e "🔒 TLS should be enabled shortly (a minute or less)"
   echo -e "✨ Done! ✨"

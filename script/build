@@ -88,9 +88,13 @@ k8s_success () {
 }
 
 k8s_apply () {
-  echo "🚀 Applying manifests..."
-  kubectl apply -f k8s/ --recursive
+  echo "🚀 Deploying 'terraform/k8s'..."
+  terraform init || exit 1
+  terraform apply -auto-approve || exit 1
+  echo "✅ terraform/k8s deployed"
 }
+
+cd $REPO_DIR/terraform/k8s
 
 # Apply all the manifests in the k8s/ directory
 set +e
