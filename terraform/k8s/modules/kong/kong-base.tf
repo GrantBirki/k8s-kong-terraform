@@ -686,14 +686,6 @@ resource "kubernetes_manifest" "customresourcedefinition_tcpingresses_configurat
       }
       "version" = "v1beta1"
     }
-    "status" = {
-      "acceptedNames" = {
-        "kind"   = ""
-        "plural" = ""
-      }
-      "conditions"     = []
-      "storedVersions" = []
-    }
   }
 }
 
