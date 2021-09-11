@@ -105,3 +105,11 @@ These are a mix of steps and an outline of the `make enable-tls` helper script
 ## Purpose 💡
 
 The purpose of this project/repo is to quickly build a minimal K8s cluster with Kong + Terraform to get a project going.
+
+## Example Diagram 🗺
+
+The diagram below shows an example of what a K8s cluster would look like with this deployment.
+
+> Note: Rather than having a `kermit`, `cat`, and `dog` service - you would just have one service, the `nginx-example`
+
+![k8s-kong-terraform Diagram](docs/diagrams/k8s-kong-terraform.png)
