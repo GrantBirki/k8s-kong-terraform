@@ -1,9 +1,9 @@
 # You may edit any of the default values in this file to tweak your cluster settings
 # Examples: Change the number of nodes, the size of your nodes, your nodes storage, the name of your cluster, the region, etc
 
-variable "cluster_name" {
-  description = "The name of your K8s cluster"
-  default     = "birki-k8s" # Change the name here to something unique for your own cluster
+variable "project_name" {
+  description = "The name of your project"
+  default     = "birki" # Change the name here to something unique for your own cluster
   type        = string
 }
 
