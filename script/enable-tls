@@ -18,34 +18,22 @@ else
   exit 1
 fi
 
-echo "🔨 Pre-staging up cert-manager K8s plugins"
-if [ -f "$REPO_DIR/k8s/01-cert-manager/01-namespace.yaml.disabled" ]; then
-    mv $REPO_DIR/k8s/01-cert-manager/01-namespace.yaml.disabled $REPO_DIR/k8s/01-cert-manager/01-namespace.yaml
-fi
-if [ -f "$REPO_DIR/k8s/01-cert-manager/02-cert-manager.yaml.disabled" ]; then
-    mv $REPO_DIR/k8s/01-cert-manager/02-cert-manager.yaml.disabled $REPO_DIR/k8s/01-cert-manager/02-cert-manager.yaml
-fi
-if [ -f "$REPO_DIR/k8s/01-cert-manager/03-lets-encrypt.yaml.disabled" ]; then
-    mv $REPO_DIR/k8s/01-cert-manager/03-lets-encrypt.yaml.disabled $REPO_DIR/k8s/01-cert-manager/03-lets-encrypt.yaml
-fi
-echo "✅ cert-manager K8s plugins pre-staged successfully"
-
 udpdate_grafana_hostname () {
-    read -p "What subdomain for your site would you like to use for grafana (ex: grafana.example.com)? " GRAFANA_HOSTNAME
-    sed -i "s/<grafana.example.com>/$GRAFANA_HOSTNAME/g" $REPO_DIR/k8s/03-kong/02-kong-routes.yaml
-    echo "✅ Updated the Grafana hostname to: $GRAFANA_HOSTNAME"
+  read -p "What subdomain for your site would you like to use for grafana (ex: grafana.example.com)? " GRAFANA_HOSTNAME
+  sed -i "s/<grafana.example.com>/$GRAFANA_HOSTNAME/g" $REPO_DIR/terraform/k8s/modules/kong/kong-routes.yaml
+  echo "✅ Updated the Grafana hostname to: $GRAFANA_HOSTNAME"
 }
 
 read -p "Please enter the email you wish to associate with LetsEncrypt (ex: name@example.com): " TLS_EMAIL
-sed -i "s/<example-email@example.com>/$TLS_EMAIL/g" $REPO_DIR/k8s/01-cert-manager/03-lets-encrypt.yaml
+sed -i "s/<example-email@example.com>/$TLS_EMAIL/g" $REPO_DIR/terraform/k8s/modules/cert-manager/lets-encrypt.yaml
 read -p "What is the main hostname for your site that you would like to use (ex: www.example.com)? " WEB_HOSTNAME
-sed -i "s/<www.example.com>/$WEB_HOSTNAME/g" $REPO_DIR/k8s/03-kong/02-kong-routes.yaml
+sed -i "s/<www.example.com>/$WEB_HOSTNAME/g" $REPO_DIR/terraform/k8s/modules/kong/kong-routes.yaml
 read -p "Do you want to publically expose Grafana (If not, TLS is not needed for Grafana) (y/n)? " GRAFANA_OPTION
 if [ "$GRAFANA_OPTION" = "y" ]; then
   read -p "Do you want to IP restrict Grafana(y/n)? " GRAFANA_IP_OPTION
   if [ "$GRAFANA_IP_OPTION" = "y" ]; then
     read -p "Please enter your IP address (IPv4) to allow traffic from (ex: 123.123.123.123): " GRAFANA_IP_ALLOW
-    sed -i "s/123.123.123.123/$GRAFANA_IP_ALLOW/g" $REPO_DIR/k8s/03-kong/03-kong-plugins.yaml
+    sed -i "s/123.123.123.123/$GRAFANA_IP_ALLOW/g" $REPO_DIR/terraform/k8s/modules/kong/kong-plugins.yaml
     echo "✅ Updated IP allowlist with: $GRAFANA_IP_ALLOW"
     udpdate_grafana_hostname
   else
@@ -56,9 +44,9 @@ else
 fi
 
 echo "Nice work! Now here comes the manual part (sorry). Scroll through each of the following files and read each text comment carefully to configure your TLS settings:"
-echo "  - k8s/01-cert-manager/03-lets-encrypt.yaml"
-echo "  - k8s/03-kong/02-kong-routes.yaml"
-echo "  - k8s/03-kong/03-kong-plugins.yaml"
+echo "  - terraform/k8s/modules/cert-manager/lets-encrypt.yaml"
+echo "  - terraform/k8s/modules/kong/kong-routes.yaml"
+echo "  - terraform/k8s/modules/kong/kong-plugins.yaml"
 
 echo -e "\n You will also need to update your DNS records to point to your new hostname(s) for TLS to work correctly. Here are examples of the the DNS records you will need to create assuming you enabled TLS and public routing for www.example.com and grafana.example.com:"
 echo "  - Type: A     | Key: proxy.example.com   | Value: <kong proxy external IP>"
@@ -78,17 +66,19 @@ echo "🚀 Let's attempt a deploy with TLS!"
 
 k8s_success () {
 
-  PROXY_IP=$(kubectl get -o jsonpath="{.status.loadBalancer.ingress[0].ip}" service -n kong kong-proxy)
-
   echo -e "✅ All manifests applied successfully\n"
   echo -e "🔒 TLS should be enabled shortly (a minute or less)"
   echo -e "✨ Done! ✨"
 }
 
 k8s_apply () {
-  echo "🚀 Applying manifests..."
-  kubectl apply -f k8s/ --recursive
+  echo "🚀 Deploying 'terraform/k8s'..."
+  terraform init || exit 1
+  terraform apply -auto-approve || exit 1
+  echo "✅ terraform/k8s deployed"
 }
+
+cd $REPO_DIR/terraform/k8s
 
 # Apply all the manifests in the k8s/ directory
 set +e

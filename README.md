@@ -1,22 +1,22 @@
 # k8s-kong-terraform
 
-Create a Kubernetes cluster using Kong as an ingress running in Azure AKS using Terraform! (and a mix of K8s manifests 😉)
+Create a Kubernetes cluster using Kong as an ingress running in Azure AKS using PURE Terraform!
 
 Once deployed, a sample NGINX HTTP application will be up and running for you to test.
 
 ## What you will create
 
-- A Kubernetes Cluster running on Azure Kubernetes Service (AKS)
+- A Kubernetes Cluster running on Azure Kubernetes Service ([AKS](https://azure.microsoft.com/en-us/services/kubernetes-service/#overview))
 - A K8s ingress that uses [Kong](https://konghq.com/)
-- Grafana/Prometheus dashboards for viewing network metrics from Kong (made for you)
-- A sample NGINX application which serves HTTP requests (loadbalanced by Kong)
-- (optionally) Enable TLS encryption on your external facing Kong ingress for security!
+- Grafana/Prometheus [dashboards](https://grafana.com/grafana/dashboards/7424) for viewing network metrics from Kong (made for you)
+- A sample [NGINX](https://www.nginx.com/) application which serves HTTP requests (loadbalanced by Kong)
+- (optionally) Enable TLS encryption on your external facing Kong ingress for security (using [cert-manager](https://cert-manager.io/docs/)!
 
 ## Prerequisites
 
 You will need a few things to use this project:
 
-1. An Azure account (this project uses AKS)
+1. An [Azure](https://azure.microsoft.com/en-us/free/) account (this project uses AKS)
 1. [tfenv](https://github.com/tfutils/tfenv) (for managing Terraform versions)
 1. [kubectl](https://kubernetes.io/docs/tasks/tools/) (for applying K8s manifests)
 1. [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
@@ -29,9 +29,13 @@ You will need a few things to use this project:
     - [`terraform\k8s-cluster\versions.tf`](terraform\k8s-cluster\versions.tf)
     - [`terraform\k8s-cluster\variables.tf`](terraform\k8s-cluster\variables.tf)
 
+    > Example: Updating values with your own unique K8s cluster name and pointing to your own Terraform cloud workspaces
+
 ## Usage
 
 Build a K8s cluster with a single command!
+
+> Go make a coffee while this runs because it can take up to 15 minutes
 
 ```console
 $ make build
@@ -96,7 +100,7 @@ These are a mix of steps and an outline of the `make enable-tls` helper script
 
 - `script/` - Contains various scripts for deployments and maintenance
 - `terraform/k8s-cluster` - The main terraform files for building the infrastructure of the K8s cluster. This folder contains configurations for the amount of K8s nodes, their VM size, their storage, etc
-- `k8s/*` - Kubernetes deployment manifests for Kong, Grafana/Prometheus, and the NGINX example http server
+- `terraform/k8s/*` - Kubernetes deployment manifests and Terraform files for Kong, Grafana/Prometheus, and the NGINX example http server
 
 ## Purpose 💡
 

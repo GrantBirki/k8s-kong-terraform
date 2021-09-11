@@ -152,7 +152,6 @@ data:
     logs = /var/log/grafana
     plugins = /var/lib/grafana/plugins
     provisioning = /etc/grafana/provisioning
-
   datasources.yaml: |
     apiVersion: 1
     datasources:
@@ -216,7 +215,6 @@ data:
   run.sh: |-
     @test "Test Health" {
       url="http://grafana/api/health"
-
       code=$(wget --server-response --spider --timeout 10 --tries 1 ${url} 2>&1 | awk '/^  HTTP/{print $2}')
       [ "$code" == "200" ]
     }
