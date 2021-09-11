@@ -1,8 +1,18 @@
 ########## NGINX Container ##########
 
+resource "kubectl_manifest" "nginx_example_namespace" {
+  yaml_body = <<YAML
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nginx-example
+YAML
+}
+
 resource "kubernetes_deployment" "nginx_example" {
   metadata {
-    name = "example"
+    namespace = "nginx-example"
+    name      = "example"
     labels = {
       app = "example"
     }
@@ -50,7 +60,8 @@ resource "kubernetes_deployment" "nginx_example" {
 
 resource "kubernetes_service" "nginx_service_example" {
   metadata {
-    name = "example"
+    namespace = "nginx-example"
+    name      = "example"
     labels = {
       app = "example"
     }
