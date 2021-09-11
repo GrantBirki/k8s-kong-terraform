@@ -9,9 +9,6 @@ resource "kubernetes_manifest" "namespace_kong" {
 }
 
 resource "kubernetes_manifest" "customresourcedefinition_kongclusterplugins_configuration_konghq_com" {
-  depends_on = [
-    kubernetes_manifest.namespace_kong
-  ]
   manifest = {
     "apiVersion" = "apiextensions.k8s.io/v1beta1"
     "kind"       = "CustomResourceDefinition"
@@ -129,9 +126,6 @@ resource "kubernetes_manifest" "customresourcedefinition_kongclusterplugins_conf
 }
 
 resource "kubernetes_manifest" "customresourcedefinition_kongconsumers_configuration_konghq_com" {
-  depends_on = [
-    kubernetes_manifest.namespace_kong
-  ]
   manifest = {
     "apiVersion" = "apiextensions.k8s.io/v1beta1"
     "kind"       = "CustomResourceDefinition"
@@ -189,9 +183,6 @@ resource "kubernetes_manifest" "customresourcedefinition_kongconsumers_configura
 }
 
 resource "kubernetes_manifest" "customresourcedefinition_kongingresses_configuration_konghq_com" {
-  depends_on = [
-    kubernetes_manifest.namespace_kong
-  ]
   manifest = {
     "apiVersion" = "apiextensions.k8s.io/v1beta1"
     "kind"       = "CustomResourceDefinition"
@@ -483,9 +474,6 @@ resource "kubernetes_manifest" "customresourcedefinition_kongingresses_configura
 }
 
 resource "kubernetes_manifest" "customresourcedefinition_kongplugins_configuration_konghq_com" {
-  depends_on = [
-    kubernetes_manifest.namespace_kong
-  ]
   manifest = {
     "apiVersion" = "apiextensions.k8s.io/v1beta1"
     "kind"       = "CustomResourceDefinition"
@@ -599,9 +587,6 @@ resource "kubernetes_manifest" "customresourcedefinition_kongplugins_configurati
 }
 
 resource "kubernetes_manifest" "customresourcedefinition_tcpingresses_configuration_konghq_com" {
-  depends_on = [
-    kubernetes_manifest.namespace_kong
-  ]
   manifest = {
     "apiVersion" = "apiextensions.k8s.io/v1beta1"
     "kind"       = "CustomResourceDefinition"
@@ -701,13 +686,18 @@ resource "kubernetes_manifest" "customresourcedefinition_tcpingresses_configurat
       }
       "version" = "v1beta1"
     }
+    "status" = {
+      "acceptedNames" = {
+        "kind"   = ""
+        "plural" = ""
+      }
+      "conditions"     = []
+      "storedVersions" = []
+    }
   }
 }
 
 resource "kubernetes_manifest" "serviceaccount_kong_kong_serviceaccount" {
-  depends_on = [
-    kubernetes_manifest.namespace_kong
-  ]
   manifest = {
     "apiVersion" = "v1"
     "kind"       = "ServiceAccount"
@@ -719,9 +709,6 @@ resource "kubernetes_manifest" "serviceaccount_kong_kong_serviceaccount" {
 }
 
 resource "kubernetes_manifest" "clusterrole_kong_ingress_clusterrole" {
-  depends_on = [
-    kubernetes_manifest.namespace_kong
-  ]
   manifest = {
     "apiVersion" = "rbac.authorization.k8s.io/v1beta1"
     "kind"       = "ClusterRole"
@@ -855,9 +842,6 @@ resource "kubernetes_manifest" "clusterrole_kong_ingress_clusterrole" {
 }
 
 resource "kubernetes_manifest" "clusterrolebinding_kong_ingress_clusterrole_nisa_binding" {
-  depends_on = [
-    kubernetes_manifest.namespace_kong
-  ]
   manifest = {
     "apiVersion" = "rbac.authorization.k8s.io/v1beta1"
     "kind"       = "ClusterRoleBinding"
@@ -880,9 +864,6 @@ resource "kubernetes_manifest" "clusterrolebinding_kong_ingress_clusterrole_nisa
 }
 
 resource "kubernetes_manifest" "service_kong_kong_proxy" {
-  depends_on = [
-    kubernetes_manifest.namespace_kong
-  ]
   manifest = {
     "apiVersion" = "v1"
     "kind"       = "Service"
@@ -895,6 +876,7 @@ resource "kubernetes_manifest" "service_kong_kong_proxy" {
       "namespace" = "kong"
     }
     "spec" = {
+      "externalTrafficPolicy" = "Local" # This preserves the true client IP to Kong, rather than the Azure LB IP
       "ports" = [
         {
           "name"       = "proxy"
@@ -918,9 +900,6 @@ resource "kubernetes_manifest" "service_kong_kong_proxy" {
 }
 
 resource "kubernetes_manifest" "service_kong_kong_validation_webhook" {
-  depends_on = [
-    kubernetes_manifest.namespace_kong
-  ]
   manifest = {
     "apiVersion" = "v1"
     "kind"       = "Service"
@@ -945,9 +924,6 @@ resource "kubernetes_manifest" "service_kong_kong_validation_webhook" {
 }
 
 resource "kubernetes_manifest" "deployment_kong_ingress_kong" {
-  depends_on = [
-    kubernetes_manifest.namespace_kong
-  ]
   manifest = {
     "apiVersion" = "apps/v1"
     "kind"       = "Deployment"
