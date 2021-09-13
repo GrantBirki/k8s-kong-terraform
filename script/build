@@ -11,6 +11,8 @@ REPO_DIR="$(dirname "$SCRIPT_DIR")" # The root directory of this repository
 
 echo "🔨 Let's build a K8s cluster!"
 
+set +e # Allow failures when checking for dependencies
+
 which tfenv > /dev/null
 
 if [ $? -ne 0 ]; then
@@ -46,7 +48,6 @@ else
     exit 1
 fi
 
-set +e
 grep -i "aaaaaa-aaaa-aaaa-aaaa-aaaaaaaa\|bbbbbb-bbbb-bbbb-bbbb-bbbbbbbb" $TF_VAR_FILE
 
 if [ $? -ne 1 ]; then
@@ -55,7 +56,8 @@ if [ $? -ne 1 ]; then
 else
   echo "✅ $TF_VAR_FILE contains non-default credentials"
 fi
-set -e
+
+set -e # Prevent any kind of script failures
 
 # First we deploy the infrastructure for the k8s cluster
 echo "🚀 Deploying 'terraform/k8s-cluster'..."
