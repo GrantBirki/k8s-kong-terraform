@@ -38,6 +38,7 @@ You will need a few things to use this project:
 1. You will need to skim through the following files and edit the lines with comments:
     - [`terraform\k8s-cluster\versions.tf`](terraform\k8s-cluster\versions.tf)
     - [`terraform\k8s-cluster\variables.tf`](terraform\k8s-cluster\variables.tf)
+    - [`terraform\k8s\k8s-cluster.tf`](terraform\k8s\k8s-cluster.tf)
 
     > Example: Updating values with your own unique K8s cluster name and pointing to your own Terraform cloud workspaces
 
