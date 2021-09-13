@@ -17,7 +17,7 @@
 ## What you will create
 
 - A Kubernetes Cluster running on Azure Kubernetes Service ([AKS](https://azure.microsoft.com/en-us/services/kubernetes-service/#overview))
-- A K8s ingress that uses [Kong](https://konghq.com/)
+- A K8s ingress controller using [Kong](https://konghq.com/)
 - Grafana/Prometheus [dashboards](https://grafana.com/grafana/dashboards/7424) for viewing network metrics from Kong (made for you)
 - A sample [NGINX](https://www.nginx.com/) application which serves HTTP requests (loadbalanced by Kong)
 - (optionally) Enable TLS encryption on your external facing Kong ingress for security (using [cert-manager](https://cert-manager.io/docs/)!
