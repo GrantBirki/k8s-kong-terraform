@@ -12,6 +12,12 @@
   Once deployed, a sample NGINX HTTP application will be up and running for you to test against
 </p>
 
+<p align="center">
+  <a href="https://github.com/GrantBirki/k8s-kong-terraform/actions/workflows/deployment.yml"><img src="https://github.com/GrantBirki/k8s-kong-terraform/actions/workflows/deployment.yml/badge.svg?event=push" alt="deployment" height="18"></a>
+  <a href="https://github.com/GrantBirki/k8s-kong-terraform/actions/workflows/review.yml"><img src="https://github.com/GrantBirki/k8s-kong-terraform/actions/workflows/review.yml/badge.svg?event=push" alt="review"/></a>
+  <a href="https://github.com/GrantBirki/k8s-kong-terraform/actions/workflows/tfsec.yml"><img src="https://github.com/GrantBirki/k8s-kong-terraform/actions/workflows/tfsec.yml/badge.svg?event=push" alt="tfsec"/></a>
+</p>
+
 <hr>
 
 ## What you will create ⭐
