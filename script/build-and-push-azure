@@ -21,6 +21,6 @@ az acr login -n $ACR_NAME
 
 echo "✅ Successfully logged into ACR"
 
-docker build -t $ACR_NAME.azurecr.io/nginx:test $REPO_DIR/src/nginx_example
+docker build -t $ACR_NAME.azurecr.io/nginx:test $REPO_DIR/src/nginx
 docker push $ACR_NAME.azurecr.io/nginx:test
 echo "✅ Successfully pushed the nginx image"

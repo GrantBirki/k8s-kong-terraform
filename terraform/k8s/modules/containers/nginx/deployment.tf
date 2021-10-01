@@ -8,7 +8,7 @@ data "kubectl_path_documents" "nginx_deployment_manifest" {
     IMAGE_TAG   = "${var.IMAGE_TAG}"
     ACR_NAME    = "${var.ACR_NAME}"
   }
-  pattern = "modules/containers/nginx_example/deployment.yaml"
+  pattern = "modules/containers/nginx/deployment.yaml"
 }
 
 resource "kubectl_manifest" "nginx_deployment" {

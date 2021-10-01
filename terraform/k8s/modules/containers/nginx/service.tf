@@ -2,7 +2,7 @@ data "kubectl_file_documents" "nginx_service_manifest" {
   depends_on = [
     data.kubectl_file_documents.nginx_namespace_manifest
   ]
-  content = file("modules/containers/nginx_example/service.yaml")
+  content = file("modules/containers/nginx/service.yaml")
 }
 
 resource "kubectl_manifest" "nginx_service" {
