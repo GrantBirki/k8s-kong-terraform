@@ -1,9 +1,9 @@
 version: '3.9'
 
 services:
-  nginx_example:
-    container_name: nginx_example
+  nginx:
+    container_name: nginx
     restart: always
     build: .
     ports:
-      - "80:80"
+      - "8080:8080"

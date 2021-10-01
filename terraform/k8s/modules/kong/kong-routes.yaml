@@ -1,8 +1,8 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: example
-  namespace: nginx-example
+  name: nginx
+  namespace: nginx
   annotations:
     konghq.com/strip-path: "true"
     # kubernetes.io/tls-acme: "true" # Uncomment to enable TLS
@@ -23,9 +23,9 @@ spec:
               path: /
               backend:
                 service:
-                  name: example
+                  name: nginx
                   port:
-                    number: 80
+                    number: 8080
 ---
 # Un comment the block below to expose your Grafana dashboard publically
 # Note: It is highly recommended to use the IP allowlist plugin to limit access to the dashboard

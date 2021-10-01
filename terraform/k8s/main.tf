@@ -10,6 +10,12 @@ module "monitoring" {
   source = "./modules/monitoring"
 }
 
-module "nginx_example" {
-  source = "./modules/containers/nginx_example"
+module "nginx" {
+  source = "./modules/containers/nginx"
+  # Environment variables
+  IMAGE_TAG   = var.NGINX_IMAGE_TAG
+  ENVIRONMENT = var.ENVIRONMENT
+
+  # Config
+  ACR_NAME = data.azurerm_container_registry.acr.name
 }

@@ -57,6 +57,23 @@ else
   echo "✅ $TF_VAR_FILE contains non-default credentials"
 fi
 
+TF_VAR_FILE="terraform/k8s/terraform.auto.tfvars.json"
+if [ -f "$TF_VAR_FILE" ]; then
+    echo "✅ $TF_VAR_FILE exists"
+else 
+    echo "❌ $TF_VAR_FILE does not exist! Please create it and add your Azure credentials. Exiting..."
+    exit 1
+fi
+
+grep -i "aaaaaa-aaaa-aaaa-aaaa-aaaaaaaa\|bbbbbb-bbbb-bbbb-bbbb-bbbbbbbb" $TF_VAR_FILE
+
+if [ $? -ne 1 ]; then
+  echo "❌ Please update the '$TF_VAR_FILE' file to contain your Azure credentials! Exiting..."
+  exit 1
+else
+  echo "✅ $TF_VAR_FILE contains non-default credentials"
+fi
+
 set -e # Prevent any kind of script failures
 
 # First we deploy the infrastructure for the k8s cluster
@@ -76,6 +93,28 @@ az account set --subscription $SUBSCRIPTION_ID
 az aks get-credentials --resource-group $RESOURCE_GROUP_NAME --name $K8S_CLUSTER_NAME
 
 cd $REPO_DIR
+
+echo "🔨 Time to build and push our images to ACR so they may be used by AKS"
+
+push_to_acr () {
+  echo "🚀 Building and Pushing to ACR..."
+  $REPO_DIR/script/build-and-push-azure
+}
+
+# Push images to ACR
+set +e
+while true
+do
+  push_to_acr
+  if [ $? -ne 0 ]; then
+    echo "💡 Failed to push to ACR. Trying again... Hint: press 'ctrl+c' to abort the retry loop"
+    sleep 5
+  else
+    echo "✅ Successfully pushed image to AKS"
+    break
+  fi
+done
+set -e # Prevent any kind of script failures
 
 echo "🔨 Time to build K8s resources and apply their manifests on the cluster!"
 
