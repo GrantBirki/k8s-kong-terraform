@@ -130,6 +130,16 @@ The diagram below shows an example of what a K8s cluster would look like with th
 
 ![k8s-kong-terraform Diagram](docs/diagrams/k8s-kong-terraform.png)
 
+## Example Results 📊
+
+Once your cluster is up and running the NGINX example will look like this:
+
+![nginx](docs/assets/nginx.png)
+
+You can also view the Grafana dashboard either with `script/grafana` or by visiting your configured hostname when you configure TLS:
+
+![grafana](docs/assets/grafana.png)
+
 ## GitHub Actions ⚡
 
 Once you have successfully built your K8s cluster and tested its functionality, you can deploy it using CI/CD with GitHub actions!
