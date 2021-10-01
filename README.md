@@ -40,7 +40,7 @@ You will need a few things to use this project:
     - See the [`terraform-cloud`](docs/terraform-cloud.md) docs in this repo for more info (required if you are using Terraform Cloud)
 1. An Azure Service Principal for deploying your Terraform changes - [Create a Service Principal](https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal)
 1. Your Azure Service Principal will need `owner` permissions to your Azure Subscription. This is due to K8s needing to bind your ACR registiry to your K8s cluster with pull permissions - [Assign Roles to a Service Principal](https://docs.microsoft.com/en-us/azure/role-based-access-control/role-assignments-portal?tabs=current)
-1. You will need to skim through the following files and edit the lines with comments:
+1. You will need to skim through the following files and edit the lines with "`(CHANGE ME)`" comments:
     - [`terraform\k8s-cluster\versions.tf`](terraform\k8s-cluster\versions.tf)
     - [`terraform\k8s-cluster\variables.tf`](terraform\k8s-cluster\variables.tf)
     - [`terraform\k8s\k8s-cluster.tf`](terraform\k8s\k8s-cluster.tf)
@@ -129,6 +129,12 @@ The diagram below shows an example of what a K8s cluster would look like with th
 > Note: Rather than having a `kermit`, `cat`, and `dog` service - you would just have one service, the `nginx-example`
 
 ![k8s-kong-terraform Diagram](docs/diagrams/k8s-kong-terraform.png)
+
+## GitHub Actions ⚡
+
+Once you have successfully built your K8s cluster and tested its functionality, you can deploy it using CI/CD with GitHub actions!
+
+To do so, check out the following documentation in this repo: [`github-actions`](docs/github-actions.md)
 
 ## Contributing 👩‍💻
 
