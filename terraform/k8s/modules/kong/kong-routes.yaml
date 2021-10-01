@@ -25,7 +25,7 @@ spec:
                 service:
                   name: example
                   port:
-                    number: 80
+                    number: 8080
 ---
 # Un comment the block below to expose your Grafana dashboard publically
 # Note: It is highly recommended to use the IP allowlist plugin to limit access to the dashboard

@@ -7,6 +7,12 @@ variable "PROJECT_NAME" {
   type        = string
 }
 
+variable "ENVIRONMENT" {
+  description = "The Environment context which all containers are running in (dev/prod)"
+  type        = string
+  default     = "prod"
+}
+
 variable "NODE_COUNT" {
   description = "Number of Nodes in your K8s cluster"
   default     = 2
