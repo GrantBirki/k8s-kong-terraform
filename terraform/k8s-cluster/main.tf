@@ -1,5 +1,13 @@
+# Configure the Microsoft Azure Provider
 provider "azurerm" {
   features {}
+  # Ignore Auth Warnings
+  skip_provider_registration = true
+
+  client_id       = var.CLIENT_ID
+  client_secret   = var.CLIENT_SECRET
+  tenant_id       = var.TENANT_ID
+  subscription_id = var.SUBSCRIPTION_ID
 }
 
 resource "azurerm_resource_group" "default" {
@@ -36,4 +44,17 @@ resource "azurerm_kubernetes_cluster" "default" {
   tags = {
     created_by = "Terraform"
   }
+}
+
+# Attach the K8s cluster to ACR
+
+data "azuread_service_principal" "aks_principal" {
+  application_id = var.CLIENT_ID
+}
+
+resource "azurerm_role_assignment" "acrpull_role" {
+  scope                            = azurerm_container_registry.acr.id
+  role_definition_name             = "AcrPull"
+  principal_id                     = data.azuread_service_principal.aks_principal.id
+  skip_service_principal_aad_check = true
 }
