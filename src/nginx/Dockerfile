@@ -3,14 +3,12 @@ FROM nginx:mainline-alpine
 # set workdir
 WORKDIR /app
 
-RUN rm /etc/nginx/conf.d/*
-ADD config/default.conf /tmp/default.conf
-ADD config/index.html /usr/share/nginx/html/
-
 # Add bash for boot cmd
 RUN apk add bash
 
 # Add nginx.conf to container
+COPY --chown=nginx:nginx config/nginx.conf /etc/nginx/nginx.conf
+# Add the startup file to the container
 COPY --chown=nginx:nginx start.sh .
 
 # permissions and nginx user for tightened security
@@ -30,6 +28,14 @@ RUN touch /var/run/nginx.pid && chown -R nginx:nginx /var/run/nginx.pid
 #     && chown nginx /var/log/nginx/*log \
 #     && chmod 644 /var/log/nginx/*log
 
+ADD config/default.conf /tmp/default.conf
+ADD config/index.html /usr/share/nginx/html/
+
 USER nginx
+
+EXPOSE 8080
+
+HEALTHCHECK --start-period=5s --timeout=15s --interval=30s \
+        CMD curl --fail http://localhost:8080/health-check || exit 1   
 
 CMD ["/app/start.sh"]

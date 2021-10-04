@@ -30,4 +30,7 @@ COPY --chown=nonroot:nonroot app.py wsgi.py ./
 # define the port number the container should expose
 EXPOSE 5000
 
+HEALTHCHECK --start-period=5s --timeout=15s --interval=30s \
+    CMD curl --fail http://localhost:5000/api/health-check || exit 1   
+
 CMD ["gunicorn", "-w", "3", "-t", "60", "-b", "0.0.0.0:5000", "app:app"]

@@ -1,4 +1,7 @@
-from flask import Flask, request, jsonify
+import os
+from datetime import datetime
+
+from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 
@@ -16,6 +19,8 @@ def info():
         "proxy_ip": request.headers["X-Forwarded-For"],
         "host": request.headers["Host"],
         "user-agent": request.headers["User-Agent"],
+        "backend-hostname": os.environ["HOSTNAME"],
+        "timestamp": datetime.now().isoformat(),
     }
 
     return jsonify(resp)
