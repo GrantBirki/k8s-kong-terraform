@@ -34,6 +34,7 @@ jobs:
       terraform-k8s-cluster: ${{ steps.filter.outputs.terraform-k8s-cluster }} # changes to the k8s cluster
       terraform-k8s: ${{ steps.filter.outputs.terraform-k8s }} # changes to k8s workloads
       frontend-src: ${{ steps.filter.outputs.frontend-src }} # changes to the frontend source code
+      backend-src: ${{ steps.filter.outputs.backend-src }} # changes to the backend source code
     steps:
     - uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # pin@v2
     - uses: dorny/paths-filter@b2feaf19c27470162a626bd6fa8438ae5b263721 # pin@v2
@@ -48,6 +49,8 @@ jobs:
             - 'terraform/k8s/**'
           frontend-src:
             - 'src/frontend/**'
+          backend-src:
+            - 'src/backend/**'
 
   # For setting global vars to use in other steps
   # Note: Anywhere you want to use the outputs, you need to use the "needs: vars" yaml tag
@@ -60,6 +63,7 @@ jobs:
     outputs:
       short_sha: ${{ steps.vars.outputs.short_sha  }}
       frontend_tag: ${{ steps.vars.outputs.frontend_tag  }}
+      backend_tag: ${{ steps.vars.outputs.backend_tag  }}
     steps:
       - uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # pin@v2
       - uses: azure/login@77f1b2e3fb80c0e8645114159d17008b8a2e475a # pin@v1
@@ -82,11 +86,16 @@ jobs:
           then echo "::set-output name=frontend_tag::$SHORT_SHA"; \
           else echo "::set-output name=frontend_tag::$(.github/ci/current_tag frontend)"; \
           fi
+          if [ "${{ needs.changes.outputs.backend-src }}" == "true" ]; \
+          then echo "::set-output name=backend_tag::$SHORT_SHA"; \
+          else echo "::set-output name=backend_tag::$(.github/ci/current_tag backend)"; \
+          fi
           echo "::set-output name=short_sha::$SHORT_SHA"
       - name: Exported image_tag variables
         run: |
           echo "short_sha: ${{ steps.vars.outputs.short_sha}}"
           echo "frontend_tag: ${{ steps.vars.outputs.frontend_tag}}"
+          echo "backend_tag: ${{ steps.vars.outputs.backend_tag}}"
 
   test:
 
@@ -152,20 +161,26 @@ jobs:
         if: github.event_name == 'pull_request'
         working-directory: src
         env:
-          frontend_TAG: ${{ needs.vars.outputs.frontend_tag  }}
+          BACKEND_TAG: ${{ needs.vars.outputs.backend_tag  }}
+          FRONTEND_TAG: ${{ needs.vars.outputs.frontend_tag  }}
         run: |
           docker build -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/frontend:$FRONTEND_TAG frontend
+          docker build -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/backend:$BACKEND_TAG backend
           docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/frontend:$FRONTEND_TAG
+          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/backend:$BACKEND_TAG
 
       # Builds and pushes images on push workflows
       - name: "Build and Push image - On Push"
         if: github.event_name == 'push'
         working-directory: src
         env:
+          BACKEND_TAG: ${{ needs.vars.outputs.backend_tag  }}
           FRONTEND_TAG: ${{ needs.vars.outputs.frontend_tag  }}
         run: |
           docker build -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/frontend:$FRONTEND_TAG frontend
           docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/frontend:$FRONTEND_TAG
+          docker build -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/backend:$BACKEND_TAG backend
+          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/backend:$BACKEND_TAG
 
 # Runs a Terraform plan for the k8s-cluster and k8s workloads
   terraform-plan:
@@ -256,6 +271,7 @@ jobs:
         env:
           # Config
           TF_VAR_FRONTEND_IMAGE_TAG: ${{ needs.vars.outputs.frontend_tag  }}
+          TF_VAR_BACKEND_IMAGE_TAG: ${{ needs.vars.outputs.backend_tag  }}
           # Azure Auth
           TF_VAR_CLIENT_ID: ${{ secrets.CLIENT_ID }}
           TF_VAR_CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
@@ -372,6 +388,7 @@ jobs:
         env:
           # Config
           TF_VAR_FRONTEND_IMAGE_TAG: ${{ needs.vars.outputs.frontend_tag  }}
+          TF_VAR_BACKEND_IMAGE_TAG: ${{ needs.vars.outputs.backend_tag  }}
           # Creds
           TF_VAR_DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
           # Azure Auth
