@@ -4,9 +4,15 @@ variable "ENVIRONMENT" {
   default     = "prod"
 }
 
-variable "NGINX_IMAGE_TAG" {
+variable "FRONTEND_IMAGE_TAG" {
+  description = "The image tag to use for frontend deployments"
+  default     = "test"
+  type        = string
+}
+
+variable "BACKEND_IMAGE_TAG" {
   description = "The image tag to use for backend deployments"
-  default     = "latest"
+  default     = "test"
   type        = string
 }
 

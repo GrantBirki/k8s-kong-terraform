@@ -1,14 +1,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: nginx
-  namespace: nginx
+  name: frontend
+  namespace: frontend
   labels:
-    name: nginx
+    name: frontend
 spec:
   ports:
     - name: http
       targetPort: 8080
       port: 8080
   selector:
-    name: nginx
+    name: frontend

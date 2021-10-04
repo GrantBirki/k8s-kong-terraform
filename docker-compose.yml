@@ -1,22 +1,22 @@
 version: '3.9'
 
 services:
-  flask:
-    container_name: flask
+  backend:
+    container_name: backend
     restart: always
-    build: src/flask
+    build: src/backend
     ports:
       - "5000:5000"
     environment:
-      - ENVIRONMENT=docker-compose
+      - ENVIRONMENT_CONTEXT=docker-compose
 
-  nginx:
-    container_name: nginx
+  frontend:
+    container_name: frontend
     restart: always
-    build: src/nginx
+    build: src/frontend
     ports:
       - "8080:8080"
     environment:
-      - ENVIRONMENT=docker-compose
+      - ENVIRONMENT_CONTEXT=docker-compose
     depends_on:
-      - flask
+      - backend

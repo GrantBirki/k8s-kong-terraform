@@ -21,7 +21,7 @@ def info():
         "user-agent": request.headers["User-Agent"],
         "backend-hostname": os.environ["HOSTNAME"],
         "timestamp": datetime.now().isoformat(),
-        "environment": os.environ["ENVIRONMENT"],
+        "environment": os.environ["ENVIRONMENT_CONTEXT"],
     }
 
     return jsonify(resp)
