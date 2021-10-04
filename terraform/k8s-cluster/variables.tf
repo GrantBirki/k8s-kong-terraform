@@ -27,8 +27,8 @@ variable "VM_SIZE" {
 
 variable "CLOUD_LOCATION" {
   description = "Location/Region for the cloud provider to deploy your cluster in"
-  default = "West US 2"
-  type = string
+  default     = "West US 2"
+  type        = string
 }
 
 variable "NODE_DISK_SIZE_GB" {
