@@ -366,7 +366,6 @@ jobs:
         run: terraform init
 
       - name: Terraform apply (k8s-cluster)
-        if: github.event_name == 'pull_request'
         working-directory: terraform/k8s-cluster
         env:
           # Azure Auth
@@ -383,7 +382,6 @@ jobs:
         run: terraform init
 
       - name: Terraform apply (k8s)
-        if: github.event_name == 'pull_request'
         working-directory: terraform/k8s
         env:
           # Config
