@@ -3,17 +3,12 @@ from flask import Flask, request, jsonify
 app = Flask(__name__)
 
 
-@app.route("/")
-def hello():
-    return "Hello World!"
-
-
-@app.route("/cache-me")
+@app.route("/api/cache-me")
 def cache():
     return "nginx will cache this response"
 
 
-@app.route("/info")
+@app.route("/api/info")
 def info():
 
     resp = {
@@ -26,6 +21,6 @@ def info():
     return jsonify(resp)
 
 
-@app.route("/healthcheck")
+@app.route("/api/health-check")
 def healthcheck():
     return "success"
