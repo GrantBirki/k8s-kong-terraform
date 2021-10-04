@@ -1,0 +1,16 @@
+version: '3.9'
+
+services:
+  flask:
+    container_name: flask
+    build: src/flask
+    ports:
+      - "5000:5000"
+    restart: always
+
+  nginx:
+    container_name: nginx
+    restart: always
+    build: src/nginx
+    ports:
+      - "8080:8080"
