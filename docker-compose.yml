@@ -3,10 +3,12 @@ version: '3.9'
 services:
   flask:
     container_name: flask
+    restart: always
     build: src/flask
     ports:
       - "5000:5000"
-    restart: always
+    environment:
+      - ENVIRONMENT=docker-compose
 
   nginx:
     container_name: nginx
@@ -14,7 +16,7 @@ services:
     build: src/nginx
     ports:
       - "8080:8080"
-    environment: 
-      - FLASK_SERVER_ADDR=flask:5000
+    environment:
+      - ENVIRONMENT=docker-compose
     depends_on:
       - flask

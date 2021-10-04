@@ -116,6 +116,7 @@
     async function queryBackend() {
         response = await apiCall("/api/info", "GET");
         htmlResponse = ""
+        htmlResponse += "<p><span>Environment&nbsp;:</span> <span>" + response.content.environment + "</span></p>";
         htmlResponse += "<p><span>Status&nbsp;code:</span> <span>" + response.status + "</span></p>";
         htmlResponse += "<p><span>Backend&nbsp;hostname:</span> <span>" + response.content["backend-hostname"] + "</span></p>";
         htmlResponse += "<p><span>Timestamp&nbsp;:</span> <span>" + response.content.timestamp + "</span></p>";
