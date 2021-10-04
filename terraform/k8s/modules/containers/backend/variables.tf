@@ -5,9 +5,15 @@ variable "IMAGE_TAG" {
 }
 
 variable "ENVIRONMENT" {
-  description = "The Environment context which all containers are running in (dev/prod)"
+  description = "The Environment which all containers are running in (dev/prod)"
   type        = string
   default     = "prod"
+}
+
+variable "ENVIRONMENT_CONTEXT" {
+  description = "The Environment context which all containers are running in (kube)"
+  type        = string
+  default     = "kube"
 }
 
 variable "ACR_NAME" {

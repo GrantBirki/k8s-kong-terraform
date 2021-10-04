@@ -1,0 +1,22 @@
+version: '3.9'
+
+services:
+  backend:
+    container_name: backend
+    restart: always
+    build: src/backend
+    ports:
+      - "5000:5000"
+    environment:
+      - ENVIRONMENT_CONTEXT=docker-compose
+
+  frontend:
+    container_name: frontend
+    restart: always
+    build: src/frontend
+    ports:
+      - "8080:8080"
+    environment:
+      - ENVIRONMENT_CONTEXT=docker-compose
+    depends_on:
+      - backend

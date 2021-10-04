@@ -1,8 +1,8 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: nginx
-  namespace: nginx
+  name: frontend
+  namespace: frontend
   annotations:
     konghq.com/strip-path: "true"
     # kubernetes.io/tls-acme: "true" # Uncomment to enable TLS
@@ -23,7 +23,7 @@ spec:
               path: /
               backend:
                 service:
-                  name: nginx
+                  name: frontend
                   port:
                     number: 8080
 ---

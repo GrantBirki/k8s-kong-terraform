@@ -10,10 +10,20 @@ module "monitoring" {
   source = "./modules/monitoring"
 }
 
-module "nginx" {
-  source = "./modules/containers/nginx"
+module "frontend" {
+  source = "./modules/containers/frontend"
   # Environment variables
-  IMAGE_TAG   = var.NGINX_IMAGE_TAG
+  IMAGE_TAG   = var.FRONTEND_IMAGE_TAG
+  ENVIRONMENT = var.ENVIRONMENT
+
+  # Config
+  ACR_NAME = data.azurerm_container_registry.acr.name
+}
+
+module "backend" {
+  source = "./modules/containers/backend"
+  # Environment variables
+  IMAGE_TAG   = var.BACKEND_IMAGE_TAG
   ENVIRONMENT = var.ENVIRONMENT
 
   # Config
