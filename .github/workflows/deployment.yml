@@ -99,6 +99,8 @@ jobs:
 
   test:
 
+      # testing would go here in this job
+
       needs: changes
       if: needs.changes.outputs.src == 'true' || needs.changes.outputs.terraform-k8s == 'true' || needs.changes.outputs.terraform-k8s-cluster == 'true'
 
