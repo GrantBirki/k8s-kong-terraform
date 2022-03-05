@@ -1,0 +1,33 @@
+apiVersion: skaffold/v2beta26
+kind: Config
+metadata:
+  name: k8s-kong-terraform
+build:
+  artifacts:
+  - image: backend
+    context: src/backend
+    docker:
+      dockerfile: Dockerfile
+  - image: frontend
+    context: src/frontend
+    docker:
+      dockerfile: Dockerfile
+deploy:
+  kubectl:
+    manifests:
+    - k8s/backend/namespace.yaml
+    - k8s/backend/deployment.yaml
+    - k8s/backend/service.yaml
+    # - k8s/cert-manager/cert-manager.yaml
+    # - k8s/cert-manager/lets-encrypt.yaml
+    # - k8s/cert-manager/namespace.yaml
+    - k8s/frontend/namespace.yaml
+    - k8s/frontend/deployment.yaml
+    - k8s/frontend/service.yaml
+    # - k8s/kong/kong-base.yaml
+    # - k8s/kong/kong-namespace.yaml
+    # - k8s/kong/kong-plugins.yaml
+    # - k8s/kong/kong-routes.yaml
+    # - k8s/monitoring/grafana.yaml
+    # - k8s/monitoring/namespace.yaml
+    # - k8s/monitoring/prometheus.yaml
